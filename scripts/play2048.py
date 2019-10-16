@@ -13,15 +13,20 @@ browser.get('https://gabrielecirulli.github.io/2048/')
 # Play the game five times and send the socres
 scores = []
 for t in range(5):
-    # Using the pattern that produces the highest score
+    # Sending random keys
     game = browser.find_element_by_tag_name('html')
 
     while True:
+        key = random.randint(1,4)
 
-        game.send_keys(Keys.UP)
-        game.send_keys(Keys.RIGHT)
-        game.send_keys(Keys.DOWN)
-        game.send_keys(Keys.LEFT)
+        if key == 1:
+            game.send_keys(Keys.UP)
+        elif key == 2:
+            game.send_keys(Keys.DOWN)
+        elif key == 3:
+            game.send_keys(Keys.LEFT)
+        else:
+            game.send_keys(Keys.RIGHT)
         
         # Breaking the loop once the game's over
         try:
