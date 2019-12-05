@@ -39,13 +39,14 @@ with open(os.path.join(base_dir,html_file),encoding="utf8") as img_text:
     total_images = len(images) # Total images
     # Looping over the selected classes
     for image in images:
-        counter += 1 # Counter for all the images
         img_to_download = str(static_dir + image.get(image_source)).replace('?download=true','') # Getting the image URL
         image_req = res.get(img_to_download) # Requesting the image
-        downloaded_image = os.path.join(image_dir,'Image #%s.jpg' %(counter)) # Setting the filename of the image
-        # Saving the image to disk
-        with open(downloaded_image,'wb') as down_img:
-            for chunk in image_req.iter_content(10000):
-                down_img.write(chunk)
-        # Log
-        print('Image %s of %s downloaded.' %(counter, total_images))
+        if image_req.status_code == 200:
+            counter += 1 # Counter for all the images
+            downloaded_image = os.path.join(image_dir,'Image #%s.jpg' %(counter)) # Setting the filename of the image
+            # Saving the image to disk
+            with open(downloaded_image,'wb') as down_img:
+                for chunk in image_req.iter_content(100000):
+                    down_img.write(chunk)
+            # Log
+            print('Image %s of %s downloaded.' %(counter, total_images))
