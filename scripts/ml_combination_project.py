@@ -55,10 +55,10 @@ plt.show()
 # Obteniendo la data para entrenar y probar
 from sklearn.model_selection import train_test_split
 humandata = humandata.drop(columns=['DRAW_ID']) # Obviando la columna de DRAW_ID
-X = pd.concat([humandata,randomdata]) # Valor de entrada
 humandata['H/G'] = 0
 randomdata['H/G'] = 1
-Y = pd.concat([humandata,randomdata])  # Valor a predecir
+X = pd.concat([humandata,randomdata]).drop(columns='H/G') # Valor de entrada
+Y = pd.concat([humandata,randomdata]).drop(columns=columns)  # Valor a predecir
 
 # Realizando el split
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
@@ -74,14 +74,13 @@ pred_data = knn.predict(x_test)
 # Formateando la data predecida como DataFrame
 pred_data = pd.DataFrame(pred_data, 
                         index = [i for i in range(len(pred_data))], 
-                        columns = ['N1', 'N2', 'N3', 'N4', 'N5','H/G'])
+                        columns = ['H/G'])
 
 print('Resultado de la predicción', pred_data, sep='\n')
 print('') # Salto de línea adicional
 
 # Obteniendo el F1 Score utilizando la utilidad multietiqueta y formatear los datos
 # de forma que F1 Score pueda arrojarnos el resultado
-mlb = MultiLabelBinarizer().fit(y_test)
-score = f1_score(mlb.transform(y_test),mlb.transform(pred_data),average='weighted')
+score = round(f1_score(y_test,pred_data),2)
 
 print('El f1_score es: %s' %(score))
