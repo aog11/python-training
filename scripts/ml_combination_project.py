@@ -1,5 +1,4 @@
 # Importando los módulos necesarios
-from __future__ import print_function
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,27 +38,27 @@ randomgroupsize.sort_values(ascending=False)
 print(randomgroupsize)
 
 # Número más usado en cada columna
-freq = []
-freq.append(humandata['N1'].value_counts().argmax())
-freq.append(humandata['N2'].value_counts().argmax())
-freq.append(humandata['N3'].value_counts().argmax())
-freq.append(humandata['N4'].value_counts().argmax())
-freq.append(humandata['N5'].value_counts().argmax())
 columns = ['N1', 'N2', 'N3', 'N4', 'N5']
+freq = []
+for col in columns:
+    freq.append(humandata[col].value_counts().argmax())
 
 # Mostrando el número más usado en cada columna
+x_pos = [i for i, _ in enumerate(columns)]
 plt.title('Número más utilizado en una columna')  
 plt.xlabel('Columna')  
 plt.ylabel('Número') 
-plt.scatter(columns,freq,color="blue")
-plt.plot(columns,freq,color="red")
+plt.bar(x_pos,freq,color="blue")
+plt.xticks(x_pos,columns)
 plt.show()
 
 # Obteniendo la data para entrenar y probar
 from sklearn.model_selection import train_test_split
 humandata = humandata.drop(columns=['DRAW_ID']) # Obviando la columna de DRAW_ID
-X = randomdata
-Y = humandata
+X = pd.concat([humandata,randomdata]) # Valor de entrada
+humandata['H/G'] = 0
+randomdata['H/G'] = 1
+Y = pd.concat([humandata,randomdata])  # Valor a predecir
 
 # Realizando el split
 x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
@@ -75,7 +74,7 @@ pred_data = knn.predict(x_test)
 # Formateando la data predecida como DataFrame
 pred_data = pd.DataFrame(pred_data, 
                         index = [i for i in range(len(pred_data))], 
-                        columns = ['N1', 'N2', 'N3', 'N4', 'N5'])
+                        columns = ['N1', 'N2', 'N3', 'N4', 'N5','H/G'])
 
 print('Resultado de la predicción', pred_data, sep='\n')
 print('') # Salto de línea adicional
