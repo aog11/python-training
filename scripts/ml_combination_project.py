@@ -79,8 +79,6 @@ pred_data = pd.DataFrame(pred_data,
 print('Resultado de la predicción', pred_data, sep='\n')
 print('') # Salto de línea adicional
 
-# Obteniendo el F1 Score utilizando la utilidad multietiqueta y formatear los datos
-# de forma que F1 Score pueda arrojarnos el resultado
+# Obteniendo el F1 Score y desplegando el resultado
 score = round(f1_score(y_test,pred_data),2)
-
 print('El f1_score es: %s' %(score))
